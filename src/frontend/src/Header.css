@@ -1,0 +1,24 @@
+.NavBar {
+    width: 100vw;
+    display: flex;
+    border-bottom: #61dafb16 1px solid;
+  }
+  
+  .NavBar ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    width: 100vw;
+  }
+  
+  .NavBar li a {
+    display: block;
+    color: #c28943;
+    padding: 14px 21px;
+    text-decoration: none;
+    font-size: calc(10px + 1.1vmin); 
+  }
+  
+  .NavBar ul a:hover {
+    background-color: #111;
+  }

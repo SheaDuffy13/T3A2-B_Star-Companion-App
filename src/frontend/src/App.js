@@ -1,23 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import { Routes, Route, Outlet, useLocation } from 'react-router-dom'
+import { Header } from './components/Header'
+import { Footer } from './components/Footer'
+import { GalaxyHomePage } from './pages/GalaxyHomePage'
+import { StarSystemPage } from './pages/StarSystemPage'
+import { PlanetPage } from './pages/PlanetPage';
+import { ProfilePage } from './pages/ProfilePage'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <main>
+        <Routes>
+          <Route path='/' element={<GalaxyHomePage />} />
+          <Route path="/starsystem" element={<Outlet />}>
+              <Route index element={<StarSystemPage />} />
+              <Route path="planets" element={<PlanetPage />} />
+          </Route>
+          <Route path='profile' element={<ProfilePage />} />
+        </Routes>
+      </main>
+      <Footer />
     </div>
   );
 }
