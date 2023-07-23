@@ -6,6 +6,7 @@ import { GalaxyHomePage } from './pages/GalaxyHomePage'
 import { StarSystemPage } from './pages/StarSystemPage'
 import { PlanetPage } from './pages/PlanetPage';
 import { ProfilePage } from './pages/ProfilePage'
+import { GalleryPage } from './pages/GalleryPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Route path="planets" element={<PlanetPage />} />
           </Route>
           <Route path='profile' element={<ProfilePage />} />
+          <Route path='gallery' element={<GalleryPage />} />
         </Routes>
       </main>
       <Footer />

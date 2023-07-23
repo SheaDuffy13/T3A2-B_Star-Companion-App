@@ -16,6 +16,22 @@
   text-align: center;
 }
 
+.content-box {
+  width: 90vw;
+  height: 35vh;
+  background-color: #1e1e1e;
+  margin-top: 3%;
+
+}
+
+.content-box-title{
+  background-color: #313131;
+  width: 90vw;
+  height: 5vh;
+  display: flex;
+  justify-content:space-between;
+}
+
 
 /* ----FOOTER--------------------------------------------------------------- */
 footer {
