@@ -15,7 +15,7 @@ function App() {
       <main>
         <Routes>
           <Route path='/' element={<GalaxyHomePage />} />
-          <Route path="/starsystem" element={<Outlet />}>
+          <Route path="/starsystem/:id" element={<Outlet />}>
               <Route index element={<StarSystemPage />} />
               <Route path="planets" element={<PlanetPage />} />
           </Route>

@@ -2,10 +2,11 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const authRoutes = require('./routes/authRoutes');
+// const userRoutes = require('./routes/userRoutes');
 const planetRoutes = require('./routes/planetRoutes');
 const starSystemRoutes = require('./routes/starSystemRoutes');
-const userRoutes = require('./routes/userRoutes');
+const imageRoutes = require('./routes/imageRoutes')
+const noteRoutes = require('./routes/noteRoutes')
 
 require('dotenv').config();
 
@@ -13,7 +14,7 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 let corsOptions = {
-    origin: ['http://localhost:3001'],
+    origin: ['http://localhost:3000'],
     optionsSuccessStatus: 200
 }
 
@@ -43,10 +44,11 @@ app.get("/", (request, response) => {
 	});
 });
 
-// app.use('/api/auth', authRoutes);
-// app.use('/api/planets', planetRoutes);
-// app.use('/api/starSystems', starSystemRoutes);
-// app.use('/api/users', userRoutes);
+// app.use('/api/user', userRoutes);
+app.use('/api/planet', planetRoutes);
+app.use('/api/starSystem', starSystemRoutes);
+app.use('/api/image', imageRoutes);
+app.use('/api/note', noteRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

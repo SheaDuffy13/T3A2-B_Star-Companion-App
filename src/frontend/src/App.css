@@ -32,6 +32,20 @@
   justify-content:space-between;
 }
 
+.image-filter-button{
+  display: flex;
+  justify-content: right;
+}
+
+/* ---GALLERY------------------------------------------------------------- */
+.gallery-image-container{
+  display: flex;
+  /* justify-content:flex-start; */
+}
+.gallery-image-container div{
+  margin: 1%;
+}
+
 
 /* ----FOOTER--------------------------------------------------------------- */
 footer {
