@@ -2,11 +2,11 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
-// const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes');
 const planetRoutes = require('./routes/planetRoutes');
 const starSystemRoutes = require('./routes/starSystemRoutes');
-const imageRoutes = require('./routes/imageRoutes')
-const noteRoutes = require('./routes/noteRoutes')
+// const imageRoutes = require('./routes/imageRoutes')
+// const noteRoutes = require('./routes/noteRoutes')
 
 require('dotenv').config();
 
@@ -40,15 +40,28 @@ app.use(express.urlencoded({extended: true}));
 // Routes
 app.get("/", (request, response) => {
 	response.json({
-		message:"Welcome to the note taking backend"
+		message:"Welcome to the note taking backend",
 	});
 });
 
-// app.use('/api/user', userRoutes);
+app.get("/databaseHealth", async (request, response) => {
+    let databaseState = mongoose.connection.readyState;
+    let databaseName = mongoose.connection.name;
+    let databaseModels = mongoose.connection.modelNames();
+    let databaseHost = mongoose.connection.host;
+    response.json({
+        readyState: databaseState,
+        dbName: databaseName,
+        dbModels: databaseModels,
+        dbHost: databaseHost
+    })
+});
+
+app.use('/api/user', userRoutes);
 app.use('/api/planet', planetRoutes);
 app.use('/api/starSystem', starSystemRoutes);
-app.use('/api/image', imageRoutes);
-app.use('/api/note', noteRoutes);
+// app.use('/api/image', imageRoutes);
+// app.use('/api/note', noteRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
