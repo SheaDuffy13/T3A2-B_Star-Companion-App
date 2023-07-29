@@ -17,7 +17,7 @@ function App() {
           <Route path='/' element={<GalaxyHomePage />} />
           <Route path="/starsystem/:id" element={<Outlet />}>
               <Route index element={<StarSystemPage />} />
-              <Route path="planets" element={<PlanetPage />} />
+              <Route path="planet" element={<PlanetPage />} />
           </Route>
           <Route path='profile' element={<ProfilePage />} />
           <Route path='gallery' element={<GalleryPage />} />
