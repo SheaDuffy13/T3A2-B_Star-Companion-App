@@ -16,12 +16,29 @@
   text-align: center;
 }
 
-.content-box {
+.outer-display-box {
+  position: relative;
   width: 90vw;
-  height: 35vh;
   background-color: #1e1e1e;
   margin-top: 3%;
-
+  padding-bottom: 1.5%;
+}
+.outer-display-box a {
+  color: #c28943;
+  text-decoration: none;
+}
+.inner-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* align-items: center; */
+  margin-top: 40px;
+}
+.star-system {
+  width: 150px;
+  margin: 10px;
+  border: 1px solid #313131;
+  padding: 10px;
 }
 
 .content-box-title{
@@ -35,6 +52,40 @@
 .image-filter-button{
   display: flex;
   justify-content: right;
+}
+/* ---PLANETs-------------------------------------------------------- */
+.planet {
+  width: 200px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.add-planet-button{
+  position: absolute;
+  top: 5vh;
+  right: 0;
+}
+/* ---NOTES--------------------------------------------------------------- */
+.note-container {
+  position: relative;
+  border: 1px solid #0b0b0b;
+  padding: 10px;
+  background-color: #151515;
+  width: 40%;
+  font-size: 16px;
+}
+.note-container pre,
+.note-container textarea {
+  width: 100%;
+  color: #ddd6ce;
+  background-color: #151515;
+  text-align: left;
+}
+.edit-button,
+.save-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 /* ---GALLERY------------------------------------------------------------- */

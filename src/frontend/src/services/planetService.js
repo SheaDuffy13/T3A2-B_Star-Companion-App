@@ -4,6 +4,11 @@ export async function getAllPlanets() {
     const response = await api.get('/api/planet');
     return response.data;
   }
+
+  export async function getPlanet(id) {
+    const response = await api.get(`/api/planet/${id}`);
+    return response.data;
+  }
   
   export async function createPlanet(newPlanet) {
     const response = await api.post('/api/planet', newPlanet);
