@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const planetRoutes = require('./routes/planetRoutes');
 const starSystemRoutes = require('./routes/starSystemRoutes');
-// const imageRoutes = require('./routes/imageRoutes')
-// const noteRoutes = require('./routes/noteRoutes')
+// const fileupload = require('express-fileupload'); 
+
 
 require('dotenv').config();
 
@@ -32,15 +32,17 @@ mongoose.connect(
 });
 
 // Middleware
+// app.use(fileupload({useTempFiles: true}))
+
 app.use(helmet());
 app.use(cors(corsOptions))
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({extended: true}));
 
 // Routes
 app.get("/", (request, response) => {
 	response.json({
-		message:"Welcome to the note taking backend",
+		message:"Welcome to the backend",
 	});
 });
 
@@ -60,8 +62,6 @@ app.get("/databaseHealth", async (request, response) => {
 app.use('/api/user', userRoutes);
 app.use('/api/planet', planetRoutes);
 app.use('/api/starSystem', starSystemRoutes);
-// app.use('/api/image', imageRoutes);
-// app.use('/api/note', noteRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

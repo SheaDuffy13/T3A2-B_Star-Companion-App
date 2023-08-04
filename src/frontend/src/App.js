@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route, Outlet, useLocation } from 'react-router-dom'
+import { Routes, Route, Router, Outlet, useLocation } from 'react-router-dom'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { GalaxyHomePage } from './pages/GalaxyHomePage'
@@ -17,7 +17,7 @@ function App() {
           <Route path='/' element={<GalaxyHomePage />} />
           <Route path="/starsystem/:id" element={<Outlet />}>
               <Route index element={<StarSystemPage />} />
-              <Route path="planets" element={<PlanetPage />} />
+              <Route path="planet/:id" element={<PlanetPage />} />
           </Route>
           <Route path='profile' element={<ProfilePage />} />
           <Route path='gallery' element={<GalleryPage />} />
