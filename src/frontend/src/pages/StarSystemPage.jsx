@@ -2,14 +2,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getStarSystem } from '../services/starSystemService';
+import { createPlanet, deletePlanet, updatePlanet, addImage, deleteImage, addImagesToPlanet } from '../services/planetService';
 import { ContentTitleBar } from '../components/ContentTitleBar';
-import { createPlanet, deletePlanet, updatePlanet } from '../services/planetService';
+import axios from 'axios';
+import api from '../config/api';
+
 
 export function StarSystemPage({ match }) {
   const [starSystem, setStarSystem] = useState(null);
   const [newPlanetName, setNewPlanetName] = useState('');
-  const [previewPlanet, setPreviewPlanet] = useState(null);
   const [editNote, setEditNote] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const [fileInputState, setFileInputState] = useState('')
+  const [selectedFile, setSelectedFile] = useState('')
+  const [previewSource, setPreviewSource] = useState('')
+  const [previewPlanet, setPreviewPlanet] = useState(null);
+
 
   const { id } = useParams();
 
@@ -50,26 +59,72 @@ const handleUpdateNote = async (planetId, note) => {
 };
 
 // handleAddImage---------------------------------------------------
-const handleAddImage = async (planetId, image) => {
-  await updatePlanet(planetId, { $push: { images: { url: image } } });
-  setPreviewPlanet(prevState => ({
-    ...prevState,
-    images: [...prevState.images, { url: image }]
-  }));
-};
-// ---Drag to Add Image-------------------------------------------------------------------
-const handleDragOver = event => {
-  event.preventDefault();
+
+const handleAddImages = async (event) => {
+    event.preventDefault();
+    if (!selectedFiles.length) return;
+    // Convert selected files to base64 encoded strings
+    const fileReaders = Array.from(selectedFiles).map(file => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      return new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+      });
+    });
+    const base64EncodedImages = await Promise.all(fileReaders);
+    try {
+      await addImagesToPlanet(previewPlanet._id, { images: base64EncodedImages });
+      setFileInputState('');
+      setSelectedFiles([]);
+    } catch (error) {
+      console.error(error);
+    }
 };
 
-const handleDrop = async event => {
-  event.preventDefault();
-  const files = event.dataTransfer.files;
-  if (files.length > 0) {
-    const file = files[0];
-    // Add code here to handle the dropped file
-    // For example, you could call the handleAddImage function to add the image to the planet
-    handleAddImage(previewPlanet._id, file);
+const handleFileInputChange = (event) => {
+  const files = event.target.files;
+  setSelectedFiles(files);
+};
+
+const previewFile = (file) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onloadend = () => {
+    setPreviewSource(reader.result);
+  };
+};
+
+const uploadImage = async (base64EncodedImage, planetId) => {
+  try {
+    const response = await addImage(planetId, { data: base64EncodedImage });
+      if (response.status === 200) {
+        console.log('Image uploaded successfully!');
+      } else {
+        console.log('An error occurred while uploading the image');
+      }
+  } catch (error) {
+    console.log(error)
+  }
+}
+const handleSubmitFile = async (e) => {
+  console.log('submitting...')
+  e.preventDefault()
+  if(!previewSource) return;
+  uploadImage(previewSource, previewPlanet._id)
+}
+
+
+// ---delete image-------------------------------------------------------------------
+const handleDeleteImage = async (imageId) => {
+  try {
+    await deleteImage(previewPlanet._id, imageId);
+    setPreviewPlanet(prevState => ({
+      ...prevState,
+      images: prevState.images.filter(image => image._id !== imageId)
+    }));
+  } catch (error) {
+    console.error(error);
   }
 };
 // ----------------------------------------------------------------------
@@ -99,32 +154,18 @@ const handleDrop = async event => {
                     </div>
                 ))}
             </div>
-            {/* {previewPlanet && (
-                <div>
-                    <h3>{previewPlanet.name}</h3>
-                    <p>Note</p>
-                    <p>{previewPlanet.note}</p>
-                    <p>Images</p>
-                    <div style={{ overflow: 'auto', maxHeight: '200px' }}>
-                        {previewPlanet.images.map((image, index) => (
-                            <img key={index} src={image.url} alt={`Image ${index + 1}`} />
-                        ))}
-                    </div>
-                    <button onClick={() => handleDeletePlanet(previewPlanet._id)}>Delete</button>
-                </div>
-            )} */}
             {previewPlanet && (
-    <div>
-        <h2>{previewPlanet.name}</h2>
-        <div className="note-container">
-        {/* <h4>Note</h4> */}
-            {!editNote ? (
-                <>
-                    <pre>{previewPlanet.note}</pre>
-                    <button className="edit-button" onClick={() => setEditNote(true)}>Edit</button>
-                </>
-            ) : (
-                <>
+              <div>
+                  <h2>{previewPlanet.name}</h2>
+                  <div className="note-container">
+                  {/* <h4>Note</h4> */}
+                      {!editNote ? (
+                          <>
+                              <pre>{previewPlanet.note}</pre>
+                              <button className="edit-button" onClick={() => setEditNote(true)}>Edit</button>
+                          </>
+                      ) : (
+                          <>
                     <form onSubmit={event => {
                         event.preventDefault();
                         handleUpdateNote(previewPlanet._id, event.target.note.value);
@@ -137,23 +178,24 @@ const handleDrop = async event => {
             )}
         </div>
         <h3>Images</h3>
-        <div style={{ overflow: 'auto', maxHeight: '200px' }}>
+        <div className="image-container">
             {previewPlanet.images.map((image, index) => (
-                <img key={index} src={image.url} alt={`Image ${index + 1}`} />
+                // <img key={index} src={image.url} alt={`Image ${index + 1}`} />
+                <div key={index}>
+                  <img src={image.url} alt={`Image ${index + 1}`} />
+                  <button onClick={() => handleDeleteImage(image._id)}>Delete</button>
+                </div>
             ))}
         </div>
-        <form onSubmit={event => {
-            event.preventDefault();
-            handleAddImage(previewPlanet._id, event.target.image.files[0]);
-        }}>
-            <input type="file" name="image" />
-            <button type="submit">Add Image</button>
+        {/* add image here */}
+        <form onSubmit={handleAddImages}>
+          <input type="file" name="images" multiple onChange={handleFileInputChange} />
+          <button type="submit">Upload Images</button>
         </form>
+
         <button onClick={() => handleDeletePlanet(previewPlanet._id)}>Delete</button>
     </div>
-)}
-
-            
+)}     
         </div>
     </div>
   );
