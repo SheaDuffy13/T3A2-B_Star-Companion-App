@@ -77,42 +77,6 @@ exports.deletePlanet = async (req, res) => {
   }
 };
 
-//---IMAGE CONTROLLERS-----------------------------------------------------
-
-// Add an image to a planet
-exports.addImageToPlanet = async (req, res) => {
-  try {
-    const planet = await Planet.findById(req.params.id);
-    if (!planet) {
-      return res.status(404).json({ error: 'Planet not found' });
-    }
-
-    planet.images.push(req.body.image);
-    await planet.save();
-
-    res.status(200).json(planet);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Remove an image from a planet
-exports.removeImageFromPlanet = async (req, res) => {
-  try {
-    const planet = await Planet.findById(req.params.id);
-    if (!planet) {
-      return res.status(404).json({ error: 'Planet not found' });
-    }
-
-    planet.images.pull(req.body.image);
-    await planet.save();
-
-    res.status(200).json(planet);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
 //---NOTE CONTROLLERS-----------------------------------------------------
 
 // Add a note to a planet
