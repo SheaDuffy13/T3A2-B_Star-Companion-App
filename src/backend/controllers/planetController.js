@@ -1,4 +1,4 @@
-const Planet = require('../models/Planet');
+const { Planet } = require('../models/Planet');
 const Star = require('../models/StarSystem');
 
 // Get all planets
