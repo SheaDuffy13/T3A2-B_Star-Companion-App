@@ -22,7 +22,7 @@ export function GalaxyHomePage(){
     return(
         <div> 
             <div className="outer-display-box">
-                <ContentTitleBar title="Star System" />
+                <ContentTitleBar title="Star Systems" />
                 <div className="inner-container">
                     {starSystems.map(starSystem => (
                         <div key={starSystem._id} className="star-system">

@@ -37,3 +37,12 @@ export async function login(user) {
     throw error; // re-throw the error
   }
 }
+
+export async function deleteProfile() {
+  try {
+    await api.delete('/api/user/deleteProfile');
+  } catch (error) {
+    console.error(error);
+    throw error; // re-throw the error
+  }
+}

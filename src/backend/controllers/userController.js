@@ -71,7 +71,9 @@ exports.login = async (req, res) => {
 // Delete a user by ID
 exports.deleteProfile = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    console.log(req.userId)
+    const userId = req.userId;
+    const user = await User.findByIdAndDelete(userId);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -82,3 +84,4 @@ exports.deleteProfile = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+

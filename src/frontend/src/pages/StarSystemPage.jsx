@@ -1,6 +1,6 @@
 //in StarSystemPage.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getStarSystem } from '../services/starSystemService';
 import { createPlanet, deletePlanet, updatePlanet, addImage, deleteImage, addImagesToPlanet } from '../services/planetService';
 import { ContentTitleBar } from '../components/ContentTitleBar';
@@ -13,13 +13,15 @@ export function StarSystemPage({ match }) {
   const [newPlanetName, setNewPlanetName] = useState('');
   const [editNote, setEditNote] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [message, setMessage] = useState('');
+  const [loginRedirect, setLoginRedirect] = useState(false);
 
   const [fileInputState, setFileInputState] = useState('')
-  const [selectedFile, setSelectedFile] = useState('')
+  // const [selectedFile, setSelectedFile] = useState('')
   const [previewSource, setPreviewSource] = useState('')
   const [previewPlanet, setPreviewPlanet] = useState(null);
 
-
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -34,28 +36,55 @@ export function StarSystemPage({ match }) {
   const handleAddPlanet = async (event) => {
     event.preventDefault();
     if (newPlanetName) {
-      const newPlanet = await createPlanet({ name: newPlanetName, star: id });
-      setStarSystem(prevState => ({
-        ...prevState,
-        planets: [...prevState.planets, newPlanet]
-      }));
-      setNewPlanetName('');
+      try {
+        const newPlanet = await createPlanet({ name: newPlanetName, star: id });
+        setStarSystem(prevState => ({
+          ...prevState,
+          planets: [...prevState.planets, newPlanet]
+        }));
+        setNewPlanetName('');
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          setMessage('You need to log in to access this feature');
+          setLoginRedirect(true);
+        } else {
+          console.error(error);
+        }
+      }
     }
-  };
+  };  
 
   // handleDeletePlanet---------------------------------------------------
   const handleDeletePlanet = async (planetId) => {
+    try {
     await deletePlanet(planetId);
     setStarSystem(prevState => ({
       ...prevState,
       planets: prevState.planets.filter(planet => planet._id !== planetId)
     }));
     setPreviewPlanet(null);
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      setMessage('You need to log in to access this feature');
+      setLoginRedirect(true);
+    } else {
+      console.error(error);
+    }
+  }
   };
   // handleUpdateNote---------------------------------------------------
 const handleUpdateNote = async (planetId, note) => {
+  try {
   await updatePlanet(planetId, { note });
   setPreviewPlanet(prevState => ({ ...prevState, note }));
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      setMessage('You need to log in to access this feature');
+      setLoginRedirect(true);
+    } else {
+      console.error(error);
+    }
+  }
 };
 
 // handleAddImages---------------------------------------------------
@@ -87,9 +116,18 @@ const handleAddImages = async (event) => {
     setFileInputState('');
     setSelectedFiles([]);
   } catch (error) {
-    console.error(error);
+    if (error.response && error.response.status === 401) {
+      // display a message to the user indicating that they need to log in
+      setMessage('You need to log in to access this feature');
+      // provide a button or link for the user to navigate to the login page
+      setLoginRedirect(true);
+    } else {
+      // handle other errors
+      console.error(error);
+    }
   }
 };
+
 
 const handleFileInputChange = (event) => {
   const files = event.target.files;
@@ -116,6 +154,7 @@ const uploadImage = async (base64EncodedImage, planetId) => {
     console.log(error)
   }
 }
+
 const handleSubmitFile = async (e) => {
   console.log('submitting...')
   e.preventDefault()
@@ -125,30 +164,33 @@ const handleSubmitFile = async (e) => {
 
 
 // ---delete image-------------------------------------------------------------------
-const handleDeleteImage = async (imageId) => {
-  try {
-    await deleteImage(previewPlanet._id, imageId);
-    setPreviewPlanet(prevState => ({
-      ...prevState,
-      images: prevState.images.filter(image => image._id !== imageId)
-    }));
-    setStarSystem(prevState => ({
-      ...prevState,
-      planets: prevState.planets.map(planet => {
-        if (planet._id === previewPlanet._id) {
-          return {
-            ...planet,
-            images: planet.images.filter(image => image._id !== imageId)
-          };
-        }
-        return planet;
-      })
-    }));
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const handleDeleteImage = async (imageId) => {
+    try {
+      await deleteImage(previewPlanet._id, imageId);
+      setPreviewPlanet(prevState => ({
+        ...prevState,
+        images: prevState.images.filter(image => image._id !== imageId)
+      }));
+      setStarSystem(prevState => ({
+        ...prevState,
+        planets: prevState.planets.map(planet => {
+          if (planet._id === previewPlanet._id) {
+            return {
+              ...planet,
+              images: planet.images.filter(image => image._id !== imageId)
+            };
+          }
+          return planet;
+        })
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 // ----------------------------------------------------------------------
+  const handleLoginRedirect = () => {
+    navigate('/profile');
+  };
 
   return (
     <div>
@@ -175,6 +217,13 @@ const handleDeleteImage = async (imageId) => {
                     </div>
                 ))}
             </div>
+            {loginRedirect && (
+              <div>
+                <p>Account required</p>
+                <button onClick={handleLoginRedirect}>Signup or login</button>
+              </div>
+            )}
+
             {previewPlanet && (
               <div>
                   <h2>{previewPlanet.name}</h2>
@@ -201,14 +250,13 @@ const handleDeleteImage = async (imageId) => {
         <h3>Images</h3>
         <div className="image-container">
             {previewPlanet.images.map((image, index) => (
-                // <img key={index} src={image.url} alt={`Image ${index + 1}`} />
                 <div key={index}>
                   <img src={image.url} alt={`Image ${index + 1}`} />
                   <button onClick={() => handleDeleteImage(image._id)}>Delete</button>
                 </div>
             ))}
         </div>
-        {/* add image here */}
+        {/* add image */}
         <form onSubmit={handleAddImages}>
           <input type="file" name="images" multiple onChange={handleFileInputChange} />
           <button type="submit">Upload Images</button>
