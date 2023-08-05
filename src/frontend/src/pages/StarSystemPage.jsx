@@ -58,28 +58,37 @@ const handleUpdateNote = async (planetId, note) => {
   setPreviewPlanet(prevState => ({ ...prevState, note }));
 };
 
-// handleAddImage---------------------------------------------------
-
+// handleAddImages---------------------------------------------------
 const handleAddImages = async (event) => {
-    event.preventDefault();
-    if (!selectedFiles.length) return;
-    // Convert selected files to base64 encoded strings
-    const fileReaders = Array.from(selectedFiles).map(file => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      return new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-      });
+  event.preventDefault();
+  if (!selectedFiles.length) return;
+  // Convert selected files to base64 encoded strings
+  const fileReaders = Array.from(selectedFiles).map(file => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    return new Promise((resolve, reject) => {
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
     });
-    const base64EncodedImages = await Promise.all(fileReaders);
-    try {
-      await addImagesToPlanet(previewPlanet._id, { images: base64EncodedImages });
-      setFileInputState('');
-      setSelectedFiles([]);
-    } catch (error) {
-      console.error(error);
-    }
+  });
+  const base64EncodedImages = await Promise.all(fileReaders);
+  try {
+    const updatedPlanet = await addImagesToPlanet(previewPlanet._id, { images: base64EncodedImages });
+    setPreviewPlanet(updatedPlanet);
+    setStarSystem(prevState => ({
+      ...prevState,
+      planets: prevState.planets.map(planet => {
+        if (planet._id === previewPlanet._id) {
+          return updatedPlanet;
+        }
+        return planet;
+      })
+    }));
+    setFileInputState('');
+    setSelectedFiles([]);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const handleFileInputChange = (event) => {
@@ -122,6 +131,18 @@ const handleDeleteImage = async (imageId) => {
     setPreviewPlanet(prevState => ({
       ...prevState,
       images: prevState.images.filter(image => image._id !== imageId)
+    }));
+    setStarSystem(prevState => ({
+      ...prevState,
+      planets: prevState.planets.map(planet => {
+        if (planet._id === previewPlanet._id) {
+          return {
+            ...planet,
+            images: planet.images.filter(image => image._id !== imageId)
+          };
+        }
+        return planet;
+      })
     }));
   } catch (error) {
     console.error(error);
