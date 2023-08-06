@@ -29,3 +29,8 @@ export async function deleteProfile() {
     throw error; // re-throw the error
   }
 }
+
+export function isLoggedIn() {
+  const token = localStorage.getItem('token');
+  return !!token;
+}

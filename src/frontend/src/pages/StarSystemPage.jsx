@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getStarSystem, getAllPlanets } from '../services/starSystemService';
 import { createPlanet, deletePlanet, updatePlanet, deleteImage, addImagesToPlanet } from '../services/planetService';
 import { ContentTitleBar } from '../components/ContentTitleBar';
+import { isLoggedIn } from '../services/authService';
 
 
 export function StarSystemPage({ match }) {
@@ -15,23 +16,36 @@ export function StarSystemPage({ match }) {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [previewPlanet, setPreviewPlanet] = useState(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
+    setIsUserLoggedIn(isLoggedIn());
+  }, []);
+  
+
+  useEffect(() => {
     async function fetchData() {
-      const starSystemData = await getStarSystem(id);
-      setStarSystem(starSystemData);
-      const planets = await getAllPlanets(id);
-    setStarSystem(prevState => ({  //Update state with fetched planets
-      ...prevState,
-      planets: planets
-    }));
-    setLoading(false);
+      try {
+        const starSystemData = await getStarSystem(id);
+        setStarSystem(starSystemData);
+        const planets = await getAllPlanets(id);
+        setStarSystem((prevState) => ({
+          ...prevState,
+          planets: planets,
+        }));
+        setLoading(false);
+      } catch (error) {
+        // Handle the error here
+        console.error(error);
+      }
     }
     fetchData();
   }, [id]);
+  
+
   if (!starSystem) {
     return <div>Loading...</div>;
   }
@@ -167,6 +181,16 @@ const handleFileInputChange = (event) => {
     navigate('/profile');
   };
 
+
+  if (!isUserLoggedIn) {
+    return (
+      <div className='require-user'>
+        <p>You need to be logged in to access this page.</p>
+        <button onClick={() => navigate('/profile')}>Login / Signup</button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="outer-display-box">
@@ -268,7 +292,7 @@ const handleFileInputChange = (event) => {
                 
                 {uploading && <div>Uploading...</div>}
   
-                <button onClick={() => handleDeletePlanet(previewPlanet._id)}>
+                <button className='delete-planet-btn' onClick={() => handleDeletePlanet(previewPlanet._id)}>
                   Delete Planet
                 </button>
               </div>
