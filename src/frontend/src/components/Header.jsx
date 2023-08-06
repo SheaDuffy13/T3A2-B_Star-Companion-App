@@ -9,9 +9,6 @@ export function Header(){
     return(
         <header>
             <nav className="NavBar">
-            {/* <NavLink to="/">
-                <img className="" src={logo} alt="" />
-            </NavLink> */}
             <ul>
                 <li>
                     <NavLink to="/" style={({isActive}) => isActive ? activeNavStyle : undefined}>

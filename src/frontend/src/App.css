@@ -12,7 +12,7 @@
   align-items: center;
   /* justify-content: center; */
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #ffffff;
   text-align: center;
 }
 
@@ -46,37 +46,48 @@
   width: 90vw;
   height: 5vh;
   display: flex;
-  justify-content:space-between;
+  justify-content:center;
 }
 
-.image-filter-button{
-  display: flex;
-  justify-content: right;
+.logout-delete {
+  margin: 70px;
+}
+.logout-delete button {
+  margin: 30px;
+  padding: 5px;
+  cursor: pointer;
 }
 /* ---PLANETs-------------------------------------------------------- */
-.planet {
-  width: 200px;
-  margin: 10px;
-  border: 1px solid #ccc;
+.planet-div {
+  max-width: 500px;
+  margin: 1%;
+  border: 1px solid #7b7b7b;
   padding: 10px;
+
 }
-.add-planet-button{
-  position: absolute;
-  top: 5vh;
-  right: 0;
+.planet-div:hover,
+.planet-div p:hover,
+.planet-div p.open {
+  cursor: pointer;
+  color: #ffffff79;
+  background-color:#161616;
 }
+
 /* ---NOTES--------------------------------------------------------------- */
 .note-container {
   position: relative;
   border: 1px solid #0b0b0b;
-  padding: 10px;
+  padding: 1%;
   background-color: #151515;
-  width: 40%;
+  width: 93%;
   font-size: 16px;
+  margin: 2%;
+  margin-bottom: 1%;
 }
 .note-container pre,
 .note-container textarea {
   width: 100%;
+  min-height: 50px;
   color: #ddd6ce;
   background-color: #151515;
   text-align: left;
@@ -86,6 +97,8 @@
   position: absolute;
   top: 10px;
   right: 10px;
+  background-color: #9d958b;
+  padding: 2px;
 }
 /*----PLANET PREVIEW IMAGES-----------------------------------------------*/
 .image-container {
@@ -100,16 +113,20 @@
   height: 200px;
   margin: 5px;
 }
+.image-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 
 /* ---GALLERY------------------------------------------------------------- */
-.gallery-image-container{
+/* .gallery-image-container{
   display: flex;
-  /* justify-content:flex-start; */
 }
 .gallery-image-container div{
   margin: 1%;
-}
-
+} */
 
 /* ----FOOTER--------------------------------------------------------------- */
 footer {
@@ -117,8 +134,7 @@ footer {
   bottom: 0%;
   display: flex;
   justify-content: center;
-  font-size: 3vh;
-  background: #1111118b;
-  /* height: 7vh; */
+  font-size: 1vh;
   width: 100vw;
+  color: #707070;
 }

@@ -5,24 +5,26 @@ import { getAllStarSystems } from '../services/starSystemService';
 
 export function GalaxyHomePage(){
     const [starSystems, setStarSystems] = useState([]);
-    const [starError, setStarError] = useState(null);
+    const [error, setError] = useState(null);
 
     // render the list of star systems
     useEffect(() => {
         getAllStarSystems()
-        .then(data => setStarSystems(data))
-        .catch(error => console.error(error))
-        // .catch(error => setStarError(error));
+        .then(data => {
+            setStarSystems(data);
+            setError(null);
+        })
+        .catch(error => {
+            console.error(error);
+            setError('An error occurred while retrieving the star systems');
+        })
       }, []);
-      if (starError) {
-        // render an error message to user
-      }
-
 
     return(
         <div> 
             <div className="outer-display-box">
                 <ContentTitleBar title="Star Systems" />
+                {error && <div>{error}</div>}
                 <div className="inner-container">
                     {starSystems.map(starSystem => (
                         <div key={starSystem._id} className="star-system">

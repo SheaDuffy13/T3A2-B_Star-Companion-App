@@ -9,9 +9,9 @@ export function ContentTitleBar({ title, onButtonClick }) {
 
     return (
       <div className="content-box-title">
-        <button onClick={handleButtonClick}>Go to Gallery</button>
+        {/* <button onClick={handleButtonClick}>Go to Gallery</button> */}
         <p>{title}</p>
-        <p>Search bar</p>
+        {/* <p>Search bar</p> */}
       </div>
     );
   }

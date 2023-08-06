@@ -1,4 +1,3 @@
-// ProfilePage.jsx
 import React, { useState, useEffect } from 'react';
 import { signup, login, deleteProfile } from '../services/authService';
 
@@ -17,7 +16,7 @@ export function ProfilePage() {
       await signup({ email: signupEmail, password: signupPassword });
       setMessage('User created successfully!');
     } catch (error) {
-      setMessage(error.response.data.error); // display the error message
+      setMessage(error.response.data.error);
     }
   }
 
@@ -28,9 +27,9 @@ export function ProfilePage() {
       setIsLoggedIn(true);
       setUserEmail(loginEmail);
       localStorage.setItem('userEmail', loginEmail);
-      setMessage(''); // clear the message
+      setMessage('');
     } catch (error) {
-      setMessage(error.response.data.error); // display the error message
+      setMessage(error.response.data.error);
     }
   }
   
@@ -107,9 +106,11 @@ export function ProfilePage() {
       )}
       {isLoggedIn && (
         <>
-          <p>User email: {userEmail}</p>
-          <button onClick={() => handleLogout()}>Log Out</button>
-          <button onClick={() => handleDeleteProfile()}>Delete Profile</button>
+          <div className='logout-delete'>
+            <p>User: {userEmail}</p>
+            <button onClick={() => handleLogout()}>Log Out</button>
+            <button onClick={() => handleDeleteProfile()}>Delete Profile</button>
+          </div>
         </>
       )}
       <p>{message}</p>
