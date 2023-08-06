@@ -11,8 +11,8 @@ require('dotenv').config();
 const port = process.env.PORT || 3001;
 const app = express();
 
-app.set('trust proxy', 1);
-app.use(cookieParser());
+// app.set('trust proxy', 1);
+// app.use(cookieParser());
 
 let corsOptions = {
     origin: ['http://localhost:3000', 'https://star-companion.netlify.app'],
