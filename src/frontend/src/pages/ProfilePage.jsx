@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
 import { signup, login, deleteProfile } from '../services/authService';
+import jwtDecode from 'jwt-decode';
 
 export function ProfilePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,14 +56,24 @@ export function ProfilePage() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setIsLoggedIn(true);
-      setUserEmail(localStorage.getItem('userEmail')); // retrieve user email from local storage
+      // Decode the token and check its expiration time
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.exp * 1000 > Date.now()) {
+        // Token is still valid
+        setIsLoggedIn(true);
+        setUserEmail(localStorage.getItem('userEmail')); // retrieve user email from local storage
+      } else {
+        // Token has expired, reset state
+        setIsLoggedIn(false);
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+      }
     }
   }, []);
   
 
   return (
-    <div>
+    <div id='profile-div'>
       {!isLoggedIn && (
         <>
           <h4>Sign Up</h4>
