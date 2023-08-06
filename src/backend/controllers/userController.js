@@ -15,7 +15,6 @@ exports.signup = async (req, res) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
-    console.log(hashedPassword);
 
     // Create new user
     const user = await User.create({
@@ -48,7 +47,6 @@ exports.login = async (req, res) => {
 
     // Check password
     existingUser.comparePassword(password, (err, isMatch) => {
-      // console.log(isMatch);
       if (err || !isMatch) {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
@@ -71,7 +69,6 @@ exports.login = async (req, res) => {
 // Delete a user by ID
 exports.deleteProfile = async (req, res) => {
   try {
-    console.log(req.userId)
     const userId = req.userId;
     const user = await User.findByIdAndDelete(userId);
 

@@ -1,9 +1,13 @@
 const express = require('express')
 const starRouter = express.Router();
-const { getAllStars, getStar } = require('../controllers/starSystemController')
+const { verifyToken } = require('../utils/auth');
+const { getAllStars, getStar, getAllPlanets } = require('../controllers/starSystemController')
 
-// starRouter.get("/", getAllStars);
 starRouter.route('/').get(getAllStars);
 starRouter.get("/:id", getStar)
+starRouter.get('/:id/planet', verifyToken, (req, res, next) => {
+    req.starId = req.params.id;
+    next();
+  }, getAllPlanets);
 
 module.exports = starRouter

@@ -1,10 +1,10 @@
 const express = require('express');
 const planetRouter = express.Router();
 const { verifyToken } = require('../utils/auth');
-const { getAllPlanets, getPlanet, createPlanet, updatePlanet, deletePlanet } = require('../controllers/planetController');
-const { getImagesForPlanet, getAllImages, addImagesToPlanet, removeImageFromPlanet } = require('../controllers/imageController');
+const { getPlanet, createPlanet, updatePlanet, deletePlanet } = require('../controllers/planetController');
+const { getImagesForPlanet, addImagesToPlanet, removeImageFromPlanet } = require('../controllers/imageController');
 
-planetRouter.get('/', verifyToken, getAllPlanets);
+// get all planets for star is in starRoutes.js
 planetRouter.get('/:id', verifyToken, getPlanet);
 planetRouter.post('/', verifyToken, createPlanet);
 planetRouter.put('/:id', verifyToken, updatePlanet);

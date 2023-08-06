@@ -3,7 +3,7 @@
 export function Footer() {
     return (
       <footer>
-        <p>footer</p>
+        <p>© Star Companion 2023</p>
       </footer>
     );
   }

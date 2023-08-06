@@ -10,7 +10,6 @@ try {
     if (!planet) {
       return res.status(404).json({ message: 'Planet not found' });
     }
-    // Extract base64 encoded image data from request body
     const base64EncodedImages = req.body.images;
     // Upload images to Cloudinary
     const resultPromises = base64EncodedImages.map(image => cloudinary.uploader.upload(image));

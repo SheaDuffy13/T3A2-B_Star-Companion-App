@@ -1,10 +1,9 @@
 import './App.css';
-import { Routes, Route, Router, Outlet, useLocation } from 'react-router-dom'
+import { Routes, Route} from 'react-router-dom'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { GalaxyHomePage } from './pages/GalaxyHomePage'
 import { StarSystemPage } from './pages/StarSystemPage'
-import { PlanetPage } from './pages/PlanetPage';
 import { ProfilePage } from './pages/ProfilePage'
 import { GalleryPage } from './pages/GalleryPage';
 
@@ -15,10 +14,7 @@ function App() {
       <main>
         <Routes>
           <Route path='/' element={<GalaxyHomePage />} />
-          <Route path="/starsystem/:id" element={<Outlet />}>
-              <Route index element={<StarSystemPage />} />
-              <Route path="planet/:id" element={<PlanetPage />} />
-          </Route>
+          <Route path='/starsystem/:id' element={<StarSystemPage />} />
           <Route path='profile' element={<ProfilePage />} />
           <Route path='gallery' element={<GalleryPage />} />
         </Routes>
