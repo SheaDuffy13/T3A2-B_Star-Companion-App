@@ -105,6 +105,7 @@
   display: flex;
   flex-wrap: wrap;
   overflow: 'auto';
+  margin: 0px 20px 0px 20px;
   /* max-width: '200px'; */
 }
 
@@ -118,7 +119,16 @@
   flex-direction: column;
   align-items: center;
 }
-
+#add-images{
+  display: flex;
+  justify-content: center;
+  margin-top: 7px;
+}
+#add-images p {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #9c9c9c;
+}
 
 /* ---GALLERY------------------------------------------------------------- */
 /* .gallery-image-container{

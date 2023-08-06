@@ -210,7 +210,8 @@ const handleFileInputChange = (event) => {
             {previewPlanet && (
               <div>
                 {/* add image */}
-                <form onSubmit={handleAddImages}>
+                <form id='add-images' onSubmit={handleAddImages}>
+                <p>Add Images: </p>
                     <input
                       type="file"
                       name="images"
