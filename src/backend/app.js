@@ -5,13 +5,14 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const planetRoutes = require('./routes/planetRoutes');
 const starSystemRoutes = require('./routes/starSystemRoutes');
-// const fileupload = require('express-fileupload'); 
-
 
 require('dotenv').config();
 
 const port = process.env.PORT || 3001;
 const app = express();
+
+app.set('trust proxy', 1);
+app.use(cookieParser());
 
 let corsOptions = {
     origin: ['http://localhost:3000', 'https://star-companion.netlify.app'],
@@ -32,11 +33,8 @@ mongoose.connect(
     console.log(error);
 });
 
-// Middleware
-// app.use(fileupload({useTempFiles: true}))
-
-app.use(helmet());
 app.use(cors(corsOptions))
+app.use(helmet());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({extended: true}));
 
@@ -65,10 +63,14 @@ app.use('/api/planet', planetRoutes);
 app.use('/api/starSystem', starSystemRoutes);
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-  });
+app.use(function(err, req, res, next) {
+res.header("Access-Control-Allow-Origin", "*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+console.error(err.stack);
+// handle the error here
+res.status(500).send('Something broke!');
+});
+  
 
 
 
