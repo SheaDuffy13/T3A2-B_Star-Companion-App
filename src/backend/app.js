@@ -14,9 +14,10 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 let corsOptions = {
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000', 'https://star-companion-app-backend.onrender.com'],
     optionsSuccessStatus: 200
 }
+
 
 // Connect to MongoDB
 mongoose.connect(
