@@ -17,7 +17,11 @@ const PlanetSchema = new Schema({
     required: true
   },
   images: [ImageSchema],
-  note: String
+  note: String,
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 
@@ -25,5 +29,3 @@ const Planet = mongoose.model('Planet', PlanetSchema);
 const Image = mongoose.model('Image', ImageSchema);
 
 module.exports = { Planet, Image };
-
-

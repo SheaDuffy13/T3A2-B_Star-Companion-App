@@ -1,15 +1,6 @@
 const { Planet } = require('../models/Planet');
 const Star = require('../models/StarSystem');
 
-// Get all planets
-exports.getAllPlanets = async (req, res) => {
-  try {
-    const planets = await Planet.find().populate('star');
-    res.status(200).json(planets);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
 
 // Get a single planet by ID
 exports.getPlanet = async (req, res) => {
@@ -29,7 +20,10 @@ exports.createPlanet = async (req, res) => {
       return res.status(404).json({ error: 'Star not found' });
     }
 
-    const planet = await Planet.create(req.body);
+    const planet = await Planet.create({
+      ...req.body,
+      userId: req.userId
+    });
     star.planets.push(planet._id);
     await star.save();
 
