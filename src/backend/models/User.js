@@ -30,10 +30,7 @@ UserSchema.pre('save', async function (next) {
 
 // Compare the provided password with the stored hash
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-  console.log(candidatePassword)
-  console.log(this.password)
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-      console.log(isMatch)
         if (err) return cb(err);
         cb(null, isMatch);
     });
