@@ -14,7 +14,7 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 let corsOptions = {
-    origin: ['http://localhost:3000', 'https://star-companion-app-backend.onrender.com'],
+    origin: ['http://localhost:3000', 'https://star-companion.netlify.app'],
     optionsSuccessStatus: 200
 }
 
